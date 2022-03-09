@@ -2,6 +2,19 @@
 驾驶员状态监控程序，实现对驾驶员的状态收集，并设置危险驾驶提醒。
 
 实现统一的环境：
+
+python==3.6.8
+
+cmake==3.22.2
+dlib==19.6.1
+imutils==0.5.4
+numpy==1.19.5
+opencv-python==4.5.5.64
+Pillow==8.4.0
+scipy==1.5.4
+six==1.16.0
+wxPython==4.1.1
+
 1.统一python版本，统一相同的库及版本。
 2.使用docker实现封装和部署，在任意的机器上都能够部署和使用。
 
@@ -11,10 +24,6 @@
 
 ### face_recognize
 
-主要负责人：
-
 实现人脸识别、状态识别、注意力集中提醒。
-
-#### jyc_code
 
 opencv_recognize.py定义了使用opencv识别人脸的方法库，供外部进行调用。
