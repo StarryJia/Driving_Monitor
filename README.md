@@ -26,6 +26,14 @@ wxPython==4.1.1
 
 利用Docker来构建打包应用镜像，这样可以一次构建到处运行，也可以充分利用Dockerfile自带的分层能力，可以方便地调整依赖包，这样在开发部署过程中格外高效。
 
+#### Dockerfile
+
+可以使用Dockerfile构建基础的镜像，并根据自己的需求进行微调。
+
+##### 我的Docker环境：
+
+使用Ubuntu虚拟机运行docker，docker基于镜像Ubuntu:18.04，并安装python3.6.9版本和相关依赖。
+
 ### face_recognize
 
 实现人脸识别、状态识别、注意力集中提醒。
