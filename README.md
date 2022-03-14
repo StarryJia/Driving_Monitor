@@ -5,16 +5,6 @@
 
 python==3.6.9
 
-cmake==3.22.2
-dlib==19.6.1
-imutils==0.5.4
-numpy==1.19.5
-opencv-python==4.5.5.64
-Pillow==8.4.0
-scipy==1.5.4
-six==1.16.0
-wxPython==4.1.1
-
 1.统一python版本，统一相同的库及版本。
 2.使用docker实现封装和部署，在任意的机器上都能够部署和使用。
 
@@ -29,6 +19,8 @@ wxPython==4.1.1
 #### Dockerfile
 
 可以使用Dockerfile构建基础的镜像，并根据自己的需求进行微调。
+目前Dockerfile在ARM架构下运行正常，在x86架构下运行有导致pyhton第三方库安装依赖出现问题，体现于调用cv2的时候会报错。
+但是构建好的镜像可以正常运行，可能需要调整第三方库对应的版本来解决dockerfile制作镜像时出现的问题。
 
 ##### 我的Docker环境：
 

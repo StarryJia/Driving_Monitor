@@ -8,11 +8,15 @@ ADD ./face_recognize/env_test_code /code
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bk \
  && sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list \
  && apt-get update \
- && apt-get install -y vim
+ && apt-get install -y vim \
  && apt-get install -y python3 \
  && apt-get install -y python3-pip \
  && mkdir ~/.pip \
- && touch ~/.pip/pip.conf
+ && touch ~/.pip/pip.conf \
+ && mkdir /my-env \
+ && apt-get install -y python3-venv \
+ && python3 -m venv my-env \
+ && /bin/bash -c "source my-env/bin/activate"
 RUN echo '\
 [global]\n\
 index-url = https://pypi.tuna.tsinghua.edu.cn/simple/\n\
