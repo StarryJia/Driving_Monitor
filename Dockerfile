@@ -17,10 +17,9 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bk \
  && touch ~/.pip/pip.conf \
  && apt-get install -y python3-venv
 
-# 更换pip源并更新pip
+# 更换pip源
 RUN echo '\
 [global]\n\
 index-url = https://pypi.tuna.tsinghua.edu.cn/simple/\n\
 [install]\n\
 trusted-host = pypi.tuna.tsinghua.edu.cn' > ~/.pip/pip.conf
-RUN python3 -m pip install pip --upgrade

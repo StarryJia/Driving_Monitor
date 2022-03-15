@@ -20,9 +20,29 @@ python==3.6.9
 
 可以使用Dockerfile构建基础的镜像，并根据自己的需求进行微调。
 目前Dockerfile在ARM架构下运行正常，在x86架构下运行有导致pyhton第三方库安装依赖出现问题，体现于调用cv2的时候会报错。
-但是构建好的镜像可以正常运行，可能需要调整第三方库对应的版本来解决dockerfile制作镜像时出现的问题。
+因此使用Dockerfile构建基础镜像 + shell脚本安装python环境。
 
-##### 我的Docker环境：
+制作镜像：
+先制作基础镜像在Dockerfile所在目录下执行
+
+```bash
+docker build -t ubuntu:base .
+```
+
+运行容器
+
+```bash
+docker run -it --privileged ubuntu:base
+```
+
+进入容器，搭建python虚拟环境
+
+```bash
+cd /install_python_env
+./build_python_env.sh
+```
+
+#### 我的Docker环境：
 
 使用Ubuntu虚拟机运行docker，docker基于镜像Ubuntu:18.04，并安装python3.6.9版本和相关依赖。
 

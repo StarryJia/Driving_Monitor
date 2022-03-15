@@ -3,18 +3,24 @@
  # @Description: install_python_env
  # @Author: jiayuchen
  # @Date: 2022-03-15 11:24:08
- # @LastEditTime: 2022-03-15 12:46:19
+ # @LastEditTime: 2022-03-15 15:45:53
 ### 
 
-mkdir /mypy-env
-python3 -m venv /mypy-env
+dir='/mypy-env'
+# 自定义环境路径
+
+mkdir ${dir}
+python3 -m venv ${dir}
 # 创建虚拟环境
 
-source /mypy-env/bin/activate
+source ${dir}/bin/activate
 # 激活虚拟环境
+
+pip install --upgrade pip
+#更新pip
 
 pip install -r requirements.txt
 # 安装相关依赖
 
-pip install requests
+#pip install xxxxx
 # 自定义安装
