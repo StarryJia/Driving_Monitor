@@ -1,15 +1,24 @@
-FROM ubuntu:18.04
-# 基于的基础镜像
+FROM arm32v7/ubuntu:18.04
+# 基于的ARM架构的镜像
+
+#FROM ubuntu:18.04
+# 基于x86架构的镜像
 
 ADD ./face_recognize/env_test_code /code
 # 将当前目录下的测试代码文件夹复制到/code路径下
 ADD /install_python_env /install_python_env
 # 将构建python虚拟环境的脚本相关文件复制到/install_python_env路径下
 
-# 更换apt-get源，同时更新索引，安装python和pip工具并创建虚拟环境
+# 更换apt-get源
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bk \
- && sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list \
- && apt-get update \
+ && sed -i s@/ports.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
+# ARM架构换源
+
+#&& sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
+# x86架构换元
+
+# 更新索引，安装python和pip工具并创建虚拟环境
+RUN apt-get update \
  && apt-get install -y vim \
  && apt-get install -y python3 \
  && apt-get install -y python3-pip \
