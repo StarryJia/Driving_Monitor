@@ -22,6 +22,8 @@ python==3.6.9
 目前Dockerfile在ARM架构下运行正常，在x86架构下运行有导致pyhton第三方库安装依赖出现问题，体现于调用cv2的时候会报错。
 因此使用Dockerfile构建基础镜像 + shell脚本安装python环境。
 
+*注：因为树莓派的架构为arm，所以为了适配树莓派目前镜像是基于arm架构搭建的，但是在构建镜像的时候提供了x86的相关选择，将注释去掉即可，同时需要注意的是在x86环境下apt-get换源也需要微调，并且由于python第三方库对环境要求较为严苛，所以目前准备手动安装python的相关库。*
+
 制作镜像：
 先制作基础镜像在Dockerfile所在目录下执行
 
@@ -44,7 +46,7 @@ cd /install_python_env
 
 #### 我的Docker环境：
 
-使用Ubuntu虚拟机运行docker，docker基于镜像Ubuntu:18.04，并安装python3.6.9版本和相关依赖。
+使用树莓派虚拟机运行docker，docker基于镜像arm32v7/Ubuntu:18.04，并安装python3.6.9版本和相关依赖。
 
 ### face_recognize
 
