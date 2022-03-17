@@ -8,6 +8,8 @@ ADD ./face_recognize/env_test_code /code
 # 将当前目录下的测试代码文件夹复制到/code路径下
 ADD /install_python_env /install_python_env
 # 将构建python虚拟环境的脚本相关文件复制到/install_python_env路径下
+ADD /python_pac /python_pac
+# 将手动安装的资源复制到镜像中
 
 # 更换apt-get源
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bk \
@@ -19,6 +21,7 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bk \
 
 # 更新索引，安装python和pip工具并创建虚拟环境
 RUN apt-get update \
+ && apt-get install -y zip \
  && apt-get install -y vim \
  && apt-get install -y python3 \
  && apt-get install -y python3-pip \
