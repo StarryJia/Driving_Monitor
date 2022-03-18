@@ -25,6 +25,7 @@ RUN apt-get update \
  && apt-get install -y vim \
  && apt-get install -y python3 \
  && apt-get install -y python3-pip \
+ && apt-get install -y gfortran libopenblas-dev liblapack-dev \
  && mkdir ~/.pip \
  && touch ~/.pip/pip.conf \
  && apt-get install -y python3-venv
