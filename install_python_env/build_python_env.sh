@@ -37,6 +37,7 @@ make install
 echo "camke installed"
 cmake -version
 
+# 先安装numpy
 pip install numpy
 
 #手动安装opencv
@@ -59,8 +60,14 @@ echo "making opencv,may take few hours."
 make -j8
 make install
 
+# 可以直接安装
 pip install six
 pip install imutils
+
+# 需要先安装工具后才能安装scipy
+echo "installing scipy,may take few hours."
+apt-get install -y gfortran libopenblas-dev liblapack-dev
+pip install scipy
 
 # pip install -r requirements.txt
 # 安装相关依赖
