@@ -38,8 +38,6 @@ echo "camke installed"
 cmake -version
 
 pip install numpy
-pip install six
-pip install 
 
 #手动安装opencv
 echo "installing opencv-python."
@@ -60,6 +58,9 @@ cmake -D BUILD_opencv_python3=YES \
 echo "making opencv,may take few hours."
 make -j8
 make install
+
+pip install six
+pip install imutils
 
 # pip install -r requirements.txt
 # 安装相关依赖
