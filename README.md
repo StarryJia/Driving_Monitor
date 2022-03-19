@@ -53,3 +53,11 @@ cd /install_python_env
 实现人脸识别、状态识别、注意力集中提醒。
 
 opencv_recognize.py定义了使用opencv识别人脸的方法库，供外部进行调用。
+
+#### python_pac
+
+为镜像提供了手动安装cmake和opencv的相关文件。
+
+#### install_python_env
+
+构建python的虚拟运行环境的sh脚本，由于包含了编译的命令，运行时间会很长，可以手动运行安装相关的python第三方库。
