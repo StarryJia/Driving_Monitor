@@ -70,8 +70,8 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
 
   # Start capturing video input from the camera
   cap = cv2.VideoCapture(camera_id)
-  cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-  cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+  # cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+  # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
   # Visualization parameters
   row_size = 20  # pixels
@@ -83,6 +83,17 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
   fps_avg_frame_count = 10
   keypoint_detection_threshold_for_classifier = 0.1
   classifier = None
+  status = {
+  'legal': 0,
+  'warning': 1,
+  'danger': 2,
+}
+  flag = 'legal'
+  warning_num = 0
+  legal_num = 0
+  continuous_nums = 100
+  legal_continuous_nums = 20
+  legal_start_num = 0
 
   # Initialize the classification model
   if classification_model:
@@ -111,28 +122,6 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
 
     # Draw keypoints and edges on input image
     image = utils.visualize(image, list_persons)
-    # print(list_persons)
-    """
-    [Person(keypoints=[
-    KeyPoint(body_part=<BodyPart.NOSE: 0>, coordinate=Point(x=336, y=272), score=0.5676351), 
-    KeyPoint(body_part=<BodyPart.LEFT_EYE: 1>, coordinate=Point(x=379, y=230), score=0.6834916), 
-    KeyPoint(body_part=<BodyPart.RIGHT_EYE: 2>, coordinate=Point(x=295, y=224), score=0.61684793), 
-    KeyPoint(body_part=<BodyPart.LEFT_EAR: 3>, coordinate=Point(x=427, y=257), score=0.438448), 
-    KeyPoint(body_part=<BodyPart.RIGHT_EAR: 4>, coordinate=Point(x=242, y=246), score=0.8014671), 
-    KeyPoint(body_part=<BodyPart.LEFT_SHOULDER: 5>, coordinate=Point(x=495, y=420), score=0.6528228), 
-    KeyPoint(body_part=<BodyPart.RIGHT_SHOULDER: 6>, coordinate=Point(x=140, y=428), score=0.6682893), 
-    KeyPoint(body_part=<BodyPart.LEFT_ELBOW: 7>, coordinate=Point(x=569, y=475), score=0.3175025), 
-    KeyPoint(body_part=<BodyPart.RIGHT_ELBOW: 8>, coordinate=Point(x=89, y=487), score=0.07942194), 
-    KeyPoint(body_part=<BodyPart.LEFT_WRIST: 9>, coordinate=Point(x=576, y=464), score=0.2471753), 
-    KeyPoint(body_part=<BodyPart.RIGHT_WRIST: 10>, coordinate=Point(x=317, y=460), score=0.008905202), 
-    KeyPoint(body_part=<BodyPart.LEFT_HIP: 11>, coordinate=Point(x=487, y=505), score=0.10334611), 
-    KeyPoint(body_part=<BodyPart.RIGHT_HIP: 12>, coordinate=Point(x=156, y=507), score=0.047061205), 
-    KeyPoint(body_part=<BodyPart.LEFT_KNEE: 13>, coordinate=Point(x=535, y=469), score=0.13279632), 
-    KeyPoint(body_part=<BodyPart.RIGHT_KNEE: 14>, coordinate=Point(x=113, y=460), score=0.2163659), 
-    KeyPoint(body_part=<BodyPart.LEFT_ANKLE: 15>, coordinate=Point(x=534, y=189), score=0.12815252), 
-    KeyPoint(body_part=<BodyPart.RIGHT_ANKLE: 16>, coordinate=Point(x=181, y=453), score=0.010690182)], 
-    bounding_box=Rectangle(start_point=Point(x=89, y=189), end_point=Point(x=576, y=507)), score=0.4287954, id=None)]
-    """
     '''
     L_EAR is right ear in the image
     R_EAR is left ear in the image
@@ -143,20 +132,51 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
     R_WRIST = list_persons[0].keypoints[10].coordinate
     L_EAR = list_persons[0].keypoints[3].coordinate
     R_EAR = list_persons[0].keypoints[4].coordinate
-    # print('L_W = ',L_WRIST)
-    # print('L_E = ',L_EAR)
-    # print('left = ',dis(L_WRIST,L_EAR))
-    # print('L_W = ',R_WRIST)
-    # print('L_E = ',R_EAR)
-    # print('right = ',dis(R_WRIST,R_EAR))
     left = dis(L_WRIST,L_EAR)
     right = dis(R_WRIST,R_EAR)
     left_to_right = dis(L_WRIST,R_EAR)
     right_to_left = dis(R_WRIST,L_EAR)
+
     if (left < 140) or (right < 140) or (left_to_right < 180) or (right_to_left < 180):
-      print('warning')
-    else:
-      print('ok')
+      # print('not ok')
+      if status[flag] == 0:
+        # 如果第一次检测到手的位置异常，进入警戒模式，并记录当前是第几帧
+        flag = 'warning'
+        start_num = counter
+        warning_num += 1
+      if status[flag] == 1:
+        # 警戒模式下每检测到一次手的位置异常则增加位置异常数
+        warning_num += 1
+    elif status[flag] != 0:
+      # 如果状态不合法但是手部状态正常
+      if (counter - legal_start_num) > (legal_continuous_nums + 50):
+        legal_start_num = counter
+        legal_num = 0
+      if (counter - legal_start_num) > legal_continuous_nums and legal_num >= 0.8 * (counter - legal_start_num):
+        # 如果正常状态超过至少连续legal_continuous_nums帧数的一定比例
+        print('in legal')
+        flag = 'legal'
+        warning_num = 0
+        legal_num = 0
+        start_num = 0
+      else:
+        legal_num += 1
+        # print(legal_num)
+    # else:
+    #   print('ok')
+        
+    
+    if status[flag] == 1:
+      #如果状态是警戒模式
+      if (counter - start_num) >= continuous_nums:
+          # 连续检查continuous_nums帧
+          if warning_num > 0.9 * continuous_nums:
+            # 如果90%的情况都检测到手的位置异常，则进入危险驾驶模式
+            flag = 'danger'
+            print('in danger!!!!')
+    if status[flag] == 2:
+      # 如果进入了危险模式，持续提醒
+      print('dangerous!!!!')
 
     if classifier:
       # Check if all keypoints are detected before running the classifier.
@@ -165,13 +185,15 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
       min_score = min([keypoint.score for keypoint in person.keypoints])
       if min_score < keypoint_detection_threshold_for_classifier:
         error_text = 'Some keypoints are not detected.'
-        text_location = (left_margin, 2 * row_size)
-        cv2.putText(image, error_text, text_location, cv2.FONT_HERSHEY_PLAIN,
-                    font_size, text_color, font_thickness)
+        print(error_text)
+        # text_location = (left_margin, 2 * row_size)
+        # cv2.putText(image, error_text, text_location, cv2.FONT_HERSHEY_PLAIN,
+        #             font_size, text_color, font_thickness)
         error_text = 'Make sure the person is fully visible in the camera.'
-        text_location = (left_margin, 3 * row_size)
-        cv2.putText(image, error_text, text_location, cv2.FONT_HERSHEY_PLAIN,
-                    font_size, text_color, font_thickness)
+        print(error_text)
+        # text_location = (left_margin, 3 * row_size)
+        # cv2.putText(image, error_text, text_location, cv2.FONT_HERSHEY_PLAIN,
+        #             font_size, text_color, font_thickness)
       else:
         # Run pose classification
         prob_list = classifier.classify_pose(person)
@@ -181,28 +203,30 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
           class_name = prob_list[i].label
           probability = round(prob_list[i].score, 2)
           result_text = class_name + ' (' + str(probability) + ')'
-          text_location = (left_margin, (i + 2) * row_size)
-          cv2.putText(image, result_text, text_location, cv2.FONT_HERSHEY_PLAIN,
-                      font_size, text_color, font_thickness)
+          print(result_text)
+          # text_location = (left_margin, (i + 2) * row_size)
+          # cv2.putText(image, result_text, text_location, cv2.FONT_HERSHEY_PLAIN,
+          #             font_size, text_color, font_thickness)
     # Calculate the FPS
-    if counter % fps_avg_frame_count == 0:
-      end_time = time.time()
-      fps = fps_avg_frame_count / (end_time - start_time)
-      start_time = time.time()
+    # if counter % fps_avg_frame_count == 0:
+    #   end_time = time.time()
+    #   fps = fps_avg_frame_count / (end_time - start_time)
+    #   start_time = time.time()
 
-    # Show the FPS
-    fps_text = 'FPS = ' + str(int(fps))
-    text_location = (left_margin, row_size)
-    cv2.putText(image, fps_text, text_location, cv2.FONT_HERSHEY_PLAIN,
-                font_size, text_color, font_thickness)
+    # # Show the FPS
+    # fps_text = 'FPS = ' + str(int(fps))
+    # print(fps_text)
+    # text_location = (left_margin, row_size)
+    # cv2.putText(image, fps_text, text_location, cv2.FONT_HERSHEY_PLAIN,
+    #             font_size, text_color, font_thickness)
 
     # Stop the program if the ESC key is pressed.
-    if cv2.waitKey(1) == 27:
-      break
-    cv2.imshow(estimation_model, image)
+    # if cv2.waitKey(1) == 27:
+    #   break
+    # cv2.imshow(estimation_model, image)
 
   cap.release()
-  cv2.destroyAllWindows()
+  # cv2.destroyAllWindows()
 
 
 def main():
