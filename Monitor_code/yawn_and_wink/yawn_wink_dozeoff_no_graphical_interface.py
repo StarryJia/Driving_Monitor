@@ -11,7 +11,6 @@ import time
 import dlib
 import cv2
 import math
-import time
 #from threading import Thread
  
 # 世界坐标系(UVW): 填写3D参考点, 该模型参考http://aifi.isr.uc.pt/Downloads/OpenGL/glAnthropometric3DModel.cpp

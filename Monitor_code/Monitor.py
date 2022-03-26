@@ -1,7 +1,3 @@
-from email import header
-from wsgiref import headers
-
-
 # -*- encoding: utf-8 -*-
 
 '''
@@ -15,12 +11,12 @@ import sys
 
 import cv2
 
-sys.path.append('.\pose_warning')
-print(sys.path)
+sys.path.append('.\Monitor_warning')
 # import yawn_and_wink.yawn_wink_dozeoff_no_graphical_interface as yw
-import pose_estimation as pe
+import Monitor_warning.pose_estimation as pe
 
 def main():
+    print('[INFO] Monitor is activated.')
     cap = cv2.VideoCapture(0)
     pe.main(cap)
 
