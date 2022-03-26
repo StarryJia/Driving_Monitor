@@ -11,7 +11,7 @@ import sys
 
 import cv2
 
-sys.path.append('.\Monitor_warning')
+sys.path.append('./Monitor_warning')
 # import yawn_and_wink.yawn_wink_dozeoff_no_graphical_interface as yw
 import Monitor_warning.pose_estimation as pe
 
