@@ -32,7 +32,7 @@ def dis(Acoord,Bcoord):
   return math.sqrt((x**2) + (y**2))
   
 def run(estimation_model: str, tracker_type: str, classification_model: str,
-        label_file: str, camera_id: int, width: int, height: int) -> None:
+        label_file: str, camera_id: int, width: int, height: int, cap) -> None:
   """Continuously run inference on images acquired from the camera.
 
   Args:
@@ -102,7 +102,7 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
                                          len(classifier.pose_class_names))
 
   # Continuously capture images from the camera and run inference
-  while cap.isOpened():
+  while True:
     success, image = cap.read()
     if not success:
       sys.exit(
@@ -229,7 +229,7 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
   # cv2.destroyAllWindows()
 
 
-def main():
+def main(cap):
   parser = argparse.ArgumentParser(
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument(
@@ -264,7 +264,7 @@ def main():
   args = parser.parse_args()
 
   run(args.model, args.tracker, args.classifier, args.label_file,
-      int(args.cameraId), args.frameWidth, args.frameHeight)
+      int(args.cameraId), args.frameWidth, args.frameHeight, cap)
 
 
 if __name__ == '__main__':

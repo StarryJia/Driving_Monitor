@@ -294,7 +294,7 @@ def yawn_wink_dozeoff(cap):
 
         
 # 释放摄像头 release cameraq
-cap.release()
+# cap.release()
 # do a bit of cleanup
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
 
