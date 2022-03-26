@@ -163,8 +163,8 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
         legal_num = 0
       if (counter - legal_start_num) > legal_continuous_nums and legal_num >= 0.8 * (counter - legal_start_num):
         # 如果正常状态超过至少连续legal_continuous_nums帧数的一定比例
-        print('[MODE CHANGE] {flag}')
         flag = 'legal'
+        print(f'[MODE CHANGE] {flag}')
         warning_num = 0
         legal_num = 0
         start_num = 0
@@ -182,10 +182,10 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
           if warning_num > 0.9 * continuous_nums:
             # 如果90%的情况都检测到手的位置异常，则进入危险驾驶模式
             flag = 'danger'
-            print('[MODE CHANGE] {flag}')
+            print(f'[MODE CHANGE] {flag}')
     if status[flag] == 2:
       # 如果进入了危险模式，持续提醒
-      print('using a moble phone!!!!!!')
+      print('[WARNING] detected using moble phone!!!!!!')
 
     if classifier:
       # Check if all keypoints are detected before running the classifier.
