@@ -4,7 +4,7 @@ FROM arm32v7/ubuntu:18.04
 #FROM ubuntu:18.04
 # 基于x86架构的镜像
 
-ADD ./face_recognize/env_test_code /code
+ADD ./Monitor_code/ /code
 # 将当前目录下的测试代码文件夹复制到/code路径下
 ADD /install_python_env /install_python_env
 # 将构建python虚拟环境的脚本相关文件复制到/install_python_env路径下

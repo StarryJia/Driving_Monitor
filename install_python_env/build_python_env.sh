@@ -73,3 +73,6 @@ pip install scipy
 
 # pip install ...
 # 自定义安装
+
+rm -rf /python_pac
+# 删除安装包
