@@ -68,6 +68,13 @@ echo "installing scipy,may take few hours."
 # 在安装scipy之前需要先安装gfortran libopenblas-dev liblapack-dev
 pip install scipy
 
+#在安装pillow之前需要先安装libjpeg-dev zlib1g-dev
+pip install pillow
+
+#需要使用特定源来安装
+pip install torchvision -f https://cf.torch.kmtea.eu/whl/stable-cn.html
+pip install torch -f https://cf.torch.kmtea.eu/whl/stable-cn.html
+
 # pip install -r requirements.txt
 # 安装相关依赖
 
