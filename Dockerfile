@@ -27,7 +27,7 @@ RUN apt-get update \
  && apt-get install -y python3-pip \
  && apt-get install -y gfortran libopenblas-dev liblapack-dev \
  && apt-get install -y libjpeg-dev zlib1g-dev \
- && apt-get install -y gawk bison \
+ && apt-get install -y gawk bison gcc-multilib\
  && mkdir ~/.pip \
  && touch ~/.pip/pip.conf \
  && apt-get install -y python3-venv

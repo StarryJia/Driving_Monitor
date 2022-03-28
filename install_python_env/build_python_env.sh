@@ -75,6 +75,10 @@ pip install pillow
 pip install torchvision -f https://cf.torch.kmtea.eu/whl/stable-cn.html
 pip install torch -f https://cf.torch.kmtea.eu/whl/stable-cn.html
 
+# 如果在import torch时报错: version `GLIBC_2.28' not found,请安装对应版本的glibc
+# 由于安装过程可能会出错导致系统无法正常运行，请手动安装，这里只是提供我安装的步骤，并且将会被注释掉
+
+
 # pip install -r requirements.txt
 # 安装相关依赖
 
