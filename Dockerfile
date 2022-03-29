@@ -7,7 +7,7 @@ FROM arm32v7/ubuntu:20.04
 
 ADD ./Monitor_code/ /code
 # 将当前目录下的测试代码文件夹复制到/code路径下
-ADD ./python_virtual_env /install_python_env
+ADD ./python_root_env /install_python_env
 # 将构建python虚拟环境的脚本相关文件复制到/install_python_env路径下
 ADD ./python_pac /python_pac
 # 将手动安装的资源复制到镜像中
