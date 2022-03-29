@@ -52,10 +52,10 @@ cmake -D BUILD_opencv_python3=YES \
 -D CMAKE_BUILD_TYPE=Release \
 -D CMAKE_INSTALL_PREFIX=${dir}/opencv3.4 \
 -D OPENCV_EXTRA_MODULES=../../opencv_contrib-3.4.10/modules \
--D PYTHON3_LIBRARIES=/usr/lib/arm-linux-gnueabihf/libpython3.6m.so \
+-D PYTHON3_LIBRARIES=/usr/lib/arm-linux-gnueabihf/libpython3.8m.so \
 -D PYTHON3_EXECUTABLE=${dir}/bin/python3 \
--D PYTHON3_NUMPY_INCLUDE_DIRS=${dir}/lib/python3.6/site-packages/numpy/core/include/ \
--D PYTHON3_PACKAGES_PATH=${dir}/lib/python3.6/site-packages ..
+-D PYTHON3_NUMPY_INCLUDE_DIRS=${dir}/lib/python3.8/site-packages/numpy/core/include/ \
+-D PYTHON3_PACKAGES_PATH=${dir}/lib/python3.8/site-packages ..
 echo "making opencv,may take few hours."
 make -j8
 make install
