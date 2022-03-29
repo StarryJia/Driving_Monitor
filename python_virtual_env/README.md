@@ -22,4 +22,4 @@ cmake + dlib + opencv + pytorch
 
 ### 所以如果不是为了尝试学习或者其他什么原因的话请不要使用该方法安装环境。
 
-请使用[root_env](../python_root_env)安装。
+请使用[root_env](../python_root_env/README.md)安装。
