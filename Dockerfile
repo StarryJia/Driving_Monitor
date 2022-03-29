@@ -1,5 +1,5 @@
-# FROM arm32v7/ubuntu:20.04
-FROM arm32v7/ubuntu:18.04
+FROM arm32v7/ubuntu:20.04
+# FROM arm32v7/ubuntu:18.04
 # 基于的ARM架构的镜像
 
 #FROM ubuntu:18.04

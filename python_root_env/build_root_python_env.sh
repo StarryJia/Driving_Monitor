@@ -7,8 +7,7 @@
 ### 
 
 apt-get install -y build-essential
-
-# # 安装cmake
+apt-get install -y libssl-dev
 
 # pip3 install --upgrade pip
 # #更新pip
@@ -21,7 +20,9 @@ apt-get install -y build-essential
 
 # apt-get install python3-scipy 
 
-# # 手动安装cmake
+# 手动安装cmake
+# 安装前需要依赖libssl-dev 和 build-essential
+# cmake 3.9.2版本无法安装
 # echo "installing cmake,may take a while."
 # cd /python_pac
 # mkdir build_cmake
@@ -32,6 +33,20 @@ apt-get install -y build-essential
 # make install
 # echo "camke installed"
 # cmake -version
+
+#可以安装 cmake 3.21.6 的版本
+echo "installing cmake,may take a while."
+cd /python_pac
+mkdir build_cmake
+tar -zxvf cmake-3.21.6.tar.gz -C build_cmake
+cd build_cmake/cmake-3.21.6
+./bootstrap
+make
+make install
+echo "camke installed"
+cmake -version
+
+
 
 # # 可以直接安装
 # pip install dlib
