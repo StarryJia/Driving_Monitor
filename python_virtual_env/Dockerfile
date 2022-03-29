@@ -5,11 +5,11 @@ FROM arm32v7/ubuntu:18.04
 #FROM ubuntu:18.04
 # 基于x86架构的镜像
 
-ADD ./Monitor_code/ /code
+ADD ../Monitor_code/ /code
 # 将当前目录下的测试代码文件夹复制到/code路径下
-ADD ./python_virtual_env /install_python_env
+ADD ../install_python_env /install_python_env
 # 将构建python虚拟环境的脚本相关文件复制到/install_python_env路径下
-ADD ./python_pac /python_pac
+ADD ../python_pac /python_pac
 # 将手动安装的资源复制到镜像中
 
 # 更换apt-get源
@@ -29,6 +29,7 @@ RUN apt-get update \
  && apt-get install -y gfortran libopenblas-dev liblapack-dev \
  && apt-get install -y libjpeg-dev zlib1g-dev \
  && apt-get install -y gawk bison gcc-multilib\
+
  && apt-get install -y python3-venv
 
 # 更换pip源
