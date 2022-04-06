@@ -27,7 +27,7 @@ import numpy as np
 from tracker import BoundingBoxTracker
 from tracker import KeypointTracker
 from tracker import TrackerConfig
-import utils
+import movenet_utils as utils
 
 # pylint: disable=g-import-not-at-top
 try:

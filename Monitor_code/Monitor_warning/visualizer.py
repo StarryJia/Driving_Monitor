@@ -22,7 +22,7 @@ from ml import Movenet
 from ml import Posenet
 import numpy as np
 import pandas as pd
-import utils
+import movenet_utils as utils
 
 _MODEL_POSENET = 'posenet'
 _MODEL_LIGHTNING = 'movenet_lightning'

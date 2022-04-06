@@ -17,6 +17,7 @@ import logging
 import sys
 import time
 import math
+import os
 
 from scipy.spatial import distance as dist
 #from imutils.video import FileVideoStream
@@ -29,11 +30,14 @@ import time
 import dlib
 import cv2
 from cv2 import sqrt
+sys.path.append(r"./Monitor_code/Monitor_warning")
 from ml import Classifier
 from ml import Movenet
 from ml import MoveNetMultiPose
 from ml import Posenet
-import utils
+import movenet_utils
+sys.path.append(r"./Monitor_code")
+import global_variable
 
 def dis(Acoord,Bcoord):
   x = Acoord.x - Bcoord.x
@@ -92,6 +96,7 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
   fps_avg_frame_count = 10
   keypoint_detection_threshold_for_classifier = 0.1
   classifier = None
+#######################################################################################  
   status = {
   'legal': 0,
   'warning': 1,
@@ -100,10 +105,11 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
   flag = 'legal'
   warning_num = 0
   legal_num = 0
-  continuous_nums = 100
-  legal_continuous_nums = 20
+  CONTINUOUS_NUM = 100
+  LEGAL_CONTINUOUS_NUMS = 20 
   legal_start_num = 0
 
+#########################################################################################
   # Initialize the classification model
   if classification_model:
     classifier = Classifier(classification_model, label_file)
@@ -113,6 +119,7 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
   # Continuously capture images from the camera and run inference
   while True:
     success, image = cap.read()
+    send_yolo_image = image
     if not success:
       sys.exit(
           'ERROR: Unable to read from webcam. Please verify your webcam settings.'
@@ -130,7 +137,7 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
       list_persons = [pose_detector.detect(image)]
 
     # Draw keypoints and edges on input image
-    image = utils.visualize(image, list_persons)
+    image = movenet_utils.visualize(image, list_persons)
     '''
     L_EAR is right ear in the image
     R_EAR is left ear in the image
@@ -147,27 +154,39 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
     right_to_left = dis(R_WRIST,L_EAR)
 
     if (left < 140) or (right < 140) or (left_to_right < 180) or (right_to_left < 180):
+      if not global_variable.get_sent_value():  #还没发送  
+        if not os.listdir(r"./yolov5/data/images"):
+          #os.remove("D:\\workspace\\001Safe-Driving-Monitoring-System\\jiehe\\yolov5\\data\\images\\please_test.jpg")
+          ##写入图片
+          cv2.imwrite(r"./yolov5/data/images/please_test.jpg", send_yolo_image)
+          global_variable.set_sent_value(1)
+          print("[has sent] !!!!!!!!!!!!!!!!!!!!!!!!!")
+
       # print('not ok')
       if status[flag] == 0:
         # 如果第一次检测到手的位置异常，进入警戒模式，并记录当前是第几帧
         flag = 'warning'
-        start_num = counter
+        start_num = counter #counter是当前帧
         warning_num += 1
-      if status[flag] == 1:
+      #if status[flag] == 1:######################################################################################
+      elif status[flag] == 1:
         # 警戒模式下每检测到一次手的位置异常则增加位置异常数
         warning_num += 1
     elif status[flag] != 0:
-      # 如果状态不合法但是手部状态正常
-      if (counter - legal_start_num) > (legal_continuous_nums + 50):
+      # 如果状态不合法但是手部状态正常, 也就是说恢复了, 打完电话了
+      if (counter - legal_start_num) > (LEGAL_CONTINUOUS_NUMS + 50):##################################################
         legal_start_num = counter
         legal_num = 0
-      if (counter - legal_start_num) > legal_continuous_nums and legal_num >= 0.8 * (counter - legal_start_num):
+      if (counter - legal_start_num) > LEGAL_CONTINUOUS_NUMS and legal_num >= 0.8 * (counter - legal_start_num):
         # 如果正常状态超过至少连续legal_continuous_nums帧数的一定比例
         flag = 'legal'
         print(f'[MODE CHANGE] {flag}')
         warning_num = 0
         legal_num = 0
         start_num = 0
+        # 设置yolo传回来的test_dic为0
+        global_variable.set_dic_value("cigarette", 0.0)
+        global_variable.set_dic_value("cellphone", 0.0)
       else:
         legal_num += 1
         # print(legal_num)
@@ -177,15 +196,29 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
     
     if status[flag] == 1:
       #如果状态是警戒模式
-      if (counter - start_num) >= continuous_nums:
+      if (counter - start_num) >= CONTINUOUS_NUM:
           # 连续检查continuous_nums帧
-          if warning_num > 0.9 * continuous_nums:
+          if warning_num > 0.9 * CONTINUOUS_NUM:
             # 如果90%的情况都检测到手的位置异常，则进入危险驾驶模式
             flag = 'danger'
             print(f'[MODE CHANGE] {flag}')
     if status[flag] == 2:
       # 如果进入了危险模式，持续提醒
-      print('[WARNING] detected using moble phone!!!!!!')
+      if_cigarette = global_variable.get_dic_value("cigarette")
+      print("[if_cigarette]               " + str(if_cigarette))
+      if_cellphone = global_variable.get_dic_value("cellphone")
+      print("[if_cellphone]               " + str(if_cellphone))
+      
+      if if_cigarette > 0.0:
+        print('[WARNING] 检测到抽烟 !!!!!!  检测到抽烟 !!!!!! 检测到抽烟 !!!!!! ' + str(if_cigarette))
+      if if_cellphone > 0.0:
+        print('[WARNING] 检测到使用手机!!!!!! 检测到使用手机!!!!!! 检测到使用手机!!!!!!   ' + str(if_cellphone))
+
+      if if_cigarette == 0.0 and if_cellphone == 0.0:
+        print('[WARNING] 只是动作不标准!!!!!!!!!!!!')
+
+    
+      
 
     if classifier:
       # Check if all keypoints are detected before running the classifier.
@@ -548,6 +581,15 @@ def yawn_wink_dozeoff(frame):
   if TOTAL >= 50 or mTOTAL>=15 or hTOTAL>=15:
       #cv2.putText(frame, "SLEEP!!!", (100, 200),cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 3)
       print("SLEEP!!!")
+      if TOTAL >= 50:
+        TOTAL = 0
+
+      if mTOTAL>=15:
+        mTOTAL = 0
+      
+      if hTOTAL>=15:
+        hTOTAL = 0
+
       
   # 按q退出
   #cv2.putText(frame, "Press 'q': Quit", (20, 500),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (84, 255, 159), 2)
