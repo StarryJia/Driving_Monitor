@@ -18,10 +18,20 @@ apt-get install -y libopencv-dev python3-opencv
 apt-get install -y python3-scipy
 pip3 install --upgrade numpy
 cd /python_pac
-pip3 install torch-1.8.1-cp38-cp38-linux_armv7l.whl 
+pip3 install torch-1.8.1-cp38-cp38-linux_armv7l.whl
+pip3 install torchvision-0.9.1-cp38-cp38-linux_armv7l.whl
 apt-get install -y python3-scipy
 pip install six
 pip install tflite-runtime
+
+# 安装yolo相关依赖
+pip3 install tqdm
+apt-get install -y python3-pandas
+pip3 install requests
+pip3 install pyyaml
+pip3 install seaborn
+# pip3 install --upgrade matplotlib
+
 
 # 手动安装cmake
 # cmake 3.9.2版本无法安装
