@@ -48,7 +48,14 @@ class yolo_thread(threading.Thread):
 
 
                 # 删除文件夹D:\\workspace\\001Safe-Driving-Monitoring-System\jiehe\\yolov5\\runs\\detect\\exp, 以及之下的所有文件和文件夹
-                shutil.rmtree(path=r"./yolov5/runs/detect/exp")
+                # shutil.rmtree(path=r"./yolov5/runs/detect/exp")
+
+                filepath = r"./yolov5/runs/detect"
+                del_list = os.listdir(filepath)
+                for f in del_list:
+                    file_path = os.path.join(filepath, f)
+                    if os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
 
                 # 删除图片
                 os.remove(r"./yolov5/data/images/please_test.jpg")

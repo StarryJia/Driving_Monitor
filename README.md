@@ -3,7 +3,7 @@
 
 实现统一的环境：
 
-python==3.6.9
+python==3.8.10
 
 1.统一python版本，统一相同的库及版本。
 2.使用docker实现封装和部署，在任意的机器上都能够部署和使用。
@@ -46,17 +46,22 @@ cd /install_python_env
 
 #### 我的Docker环境：
 
-使用树莓派虚拟机运行docker，docker基于镜像arm32v7/Ubuntu:18.04，并安装python3.6.9版本和相关依赖。
+使用树莓派虚拟机运行docker，docker基于镜像arm32v7/Ubuntu:20.04，并安装python3.8.10版本和相关依赖。
 
-### face_recognize
+### Monitor_code
 
 实现人脸识别、状态识别、注意力集中提醒。
 
-opencv_recognize.py定义了使用opencv识别人脸的方法库，供外部进行调用。
+### QUICK START
+
+```bash
+cd codes
+python3 Monitor.py
+```
 
 #### python_pac
 
-为镜像提供了手动安装cmake和opencv的相关文件。
+为镜像提供了torch和torchvison的whl文件。
 
 #### install_python_env
 
