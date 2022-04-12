@@ -153,7 +153,9 @@ def run(estimation_model: str, tracker_type: str, classification_model: str,
     left_to_right = dis(L_WRIST,R_EAR)
     right_to_left = dis(R_WRIST,L_EAR)
 
-    if (left < 140) or (right < 140) or (left_to_right < 180) or (right_to_left < 180):
+    NORMAL_DIS = 140
+    CROSS_DIS = 180
+    if (left < NORMAL_DIS) or (right < NORMAL_DIS) or (left_to_right < CROSS_DIS) or (right_to_left < CROSS_DIS):
       if not global_variable.get_sent_value():  #还没发送  
         if not os.listdir(r"./yolov5/data/images"):
           #os.remove("D:\\workspace\\001Safe-Driving-Monitoring-System\\jiehe\\yolov5\\data\\images\\please_test.jpg")
